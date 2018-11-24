@@ -410,6 +410,11 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
     return YES;
 }
 
+- (BOOL)acceptsFirstMouse:(NSEvent *)event
+{
+    return YES;
+}
+
 - (void)mouseDown:(NSEvent *)event
 {
     _glfwInputMouseClick(window,
