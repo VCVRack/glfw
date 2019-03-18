@@ -336,3 +336,14 @@ GLFWAPI GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun)
     return cbfun;
 }
 
+
+char glfwOpenedFilename[1024];
+
+const char *glfwGetOpenedFilename()
+{
+    if (glfwOpenedFilename[0])
+    {
+        return glfwOpenedFilename;
+    }
+    return NULL;
+}

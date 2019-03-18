@@ -5628,6 +5628,7 @@ GLFWAPI VkResult glfwCreateWindowSurface(VkInstance instance, GLFWwindow* window
 
 /* -------------------- END SYSTEM/COMPILER SPECIFIC --------------------- */
 
+const char *glfwGetOpenedFilename();
 
 #ifdef __cplusplus
 }

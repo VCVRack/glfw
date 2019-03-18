@@ -459,6 +459,13 @@ static GLFWbool initializeTIS(void)
         _glfwRestoreVideoModeNS(_glfw.monitors[i]);
 }
 
+- (BOOL)application:(NSApplication *)sender openFile:(NSString *)filename
+{
+    const char *filenameStr = [filename UTF8String];
+    snprintf(glfwOpenedFilename, sizeof(glfwOpenedFilename), "%s", filenameStr);
+    return YES;
+}
+
 @end // GLFWApplicationDelegate
 
 

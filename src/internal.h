@@ -774,3 +774,5 @@ char* _glfw_strdup(const char* source);
 float _glfw_fminf(float a, float b);
 float _glfw_fmaxf(float a, float b);
 
+
+extern char glfwOpenedFilename[1024];
