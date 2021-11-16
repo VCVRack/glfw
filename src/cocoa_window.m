@@ -32,7 +32,7 @@
 // Needed for _NSGetProgname
 #include <crt_externs.h>
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101200
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101200
  #define NSWindowStyleMaskBorderless NSBorderlessWindowMask
  #define NSWindowStyleMaskClosable NSClosableWindowMask
  #define NSWindowStyleMaskMiniaturizable NSMiniaturizableWindowMask
@@ -50,7 +50,7 @@
  #define NSBitmapFormatAlphaNonpremultiplied NSAlphaNonpremultipliedBitmapFormat
 #endif
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101300
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101300
  #define NSPasteboardTypeFileURL NSFilenamesPboardType
  #define NSPasteboardTypeString NSStringPboardType
 #endif
@@ -918,7 +918,7 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 
 - (void)loadMainMenu
 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1080
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080
     [[NSBundle mainBundle] loadNibNamed:@"MainMenu"
                                   owner:NSApp
                         topLevelObjects:&nibObjects];
@@ -1866,7 +1866,7 @@ VkResult _glfwPlatformCreateWindowSurface(VkInstance instance,
                                           const VkAllocationCallbacks* allocator,
                                           VkSurfaceKHR* surface)
 {
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101100
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 101100
     VkResult err;
     VkMacOSSurfaceCreateInfoMVK sci;
     PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;

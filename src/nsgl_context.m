@@ -26,7 +26,7 @@
 
 #include "internal.h"
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED < 101400
+#if MAC_OS_X_VERSION_MIN_REQUIRED < 101400
  #define NSOpenGLContextParameterSwapInterval NSOpenGLCPSwapInterval
  #define NSOpenGLContextParameterSurfaceOpacity NSOpenGLCPSurfaceOpacity
 #endif
@@ -179,18 +179,18 @@ GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
         //       Info.plist for unbundled applications
         // HACK: This assumes that NSOpenGLPixelFormat will remain
         //       a straightforward wrapper of its CGL counterpart
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 1080
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 1080
         addAttrib(kCGLPFASupportsAutomaticGraphicsSwitching);
-#endif /*MAC_OS_X_VERSION_MAX_ALLOWED*/
+#endif /*MAC_OS_X_VERSION_MIN_REQUIRED*/
     }
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101000
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 101000
     if (ctxconfig->major >= 4)
     {
         setAttrib(NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion4_1Core);
     }
     else
-#endif /*MAC_OS_X_VERSION_MAX_ALLOWED*/
+#endif /*MAC_OS_X_VERSION_MIN_REQUIRED*/
     if (ctxconfig->major >= 3)
     {
         setAttrib(NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersion3_2Core);
@@ -243,7 +243,7 @@ GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
 
     if (fbconfig->stereo)
     {
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101200
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 101200
         _glfwInputError(GLFW_FORMAT_UNAVAILABLE,
                         "NSGL: Stereo rendering is deprecated");
         return GLFW_FALSE;
