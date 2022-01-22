@@ -867,7 +867,7 @@ static GLFWbool createNativeWindow(_GLFWwindow* window,
     [window->ns.object setAcceptsMouseMovedEvents:YES];
     [window->ns.object setRestorable:NO];
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101200
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 101200
     if ([window->ns.object respondsToSelector:@selector(setTabbingMode:)])
         [window->ns.object setTabbingMode:NSWindowTabbingModeDisallowed];
 #endif
@@ -1830,7 +1830,7 @@ VkResult _glfwCreateWindowSurfaceCocoa(VkInstance instance,
 {
     @autoreleasepool {
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= 101100
+#if MAC_OS_X_VERSION_MIN_REQUIRED >= 101100
     // HACK: Dynamically load Core Animation to avoid adding an extra
     //       dependency for the majority who don't use MoltenVK
     NSBundle* bundle = [NSBundle bundleWithPath:@"/System/Library/Frameworks/QuartzCore.framework"];
