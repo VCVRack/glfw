@@ -1,7 +1,7 @@
 //========================================================================
-// GLFW 3.3 macOS - www.glfw.org
+// GLFW 3.4 macOS - www.glfw.org
 //------------------------------------------------------------------------
-// Copyright (c) 2009-2016 Camilla Löwy <elmindreda@glfw.org>
+// Copyright (c) 2009-2021 Camilla Löwy <elmindreda@glfw.org>
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -24,33 +24,12 @@
 //
 //========================================================================
 
-#define _GLFW_PLATFORM_CONTEXT_STATE            _GLFWcontextNSGL nsgl
-#define _GLFW_PLATFORM_LIBRARY_CONTEXT_STATE    _GLFWlibraryNSGL nsgl
+#define GLFW_COCOA_LIBRARY_TIMER_STATE  _GLFWtimerNS   ns;
 
-
-// NSGL-specific per-context data
+// Cocoa-specific global timer data
 //
-typedef struct _GLFWcontextNSGL
+typedef struct _GLFWtimerNS
 {
-    id           pixelFormat;
-    id	         object;
-
-} _GLFWcontextNSGL;
-
-// NSGL-specific global data
-//
-typedef struct _GLFWlibraryNSGL
-{
-    // dlopen handle for OpenGL.framework (for glfwGetProcAddress)
-    CFBundleRef     framework;
-
-} _GLFWlibraryNSGL;
-
-
-GLFWbool _glfwInitNSGL(void);
-void _glfwTerminateNSGL(void);
-GLFWbool _glfwCreateContextNSGL(_GLFWwindow* window,
-                                const _GLFWctxconfig* ctxconfig,
-                                const _GLFWfbconfig* fbconfig);
-void _glfwDestroyContextNSGL(_GLFWwindow* window);
+    uint64_t        frequency;
+} _GLFWtimerNS;
 
