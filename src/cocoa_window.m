@@ -763,7 +763,10 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 // GLFW window class
 //------------------------------------------------------------------------
 
-@interface GLFWWindow : NSWindow {}
+@interface GLFWWindow : NSWindow {
+        NSRect preFullScreenFrame;
+
+}
 @end
 
 @implementation GLFWWindow
@@ -777,6 +780,27 @@ static const NSRange kEmptyRange = { NSNotFound, 0 };
 - (BOOL)canBecomeMainWindow
 {
     return YES;
+}
+
+
+- (void)toggleFullScreen:(id)sender {
+    // NSLog(@"Custom resize handled instead of native fullscreen");
+    NSScreen *screen = [NSScreen mainScreen];
+    NSRect screenFrame = [screen visibleFrame];
+    NSRect currentFrame = [self frame];
+
+    BOOL isCurrentlyFullscreen = NSEqualRects(currentFrame, screenFrame);
+
+    if (isCurrentlyFullscreen) {
+        // Restore previous size only if we have a stored frame
+        if (!NSEqualRects(preFullScreenFrame, NSZeroRect)) {
+            [self setFrame:preFullScreenFrame display:YES animate:YES];
+            preFullScreenFrame = NSZeroRect; // Reset
+        }
+    } else {
+        preFullScreenFrame = currentFrame;
+        [self setFrame:screenFrame display:YES animate:YES]; // Go fullscreen
+    }
 }
 
 @end
