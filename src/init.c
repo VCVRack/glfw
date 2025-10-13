@@ -24,8 +24,6 @@
 //    distribution.
 //
 //========================================================================
-// Please use C89 style variable declarations in this file because VS 2010
-//========================================================================
 
 #include "internal.h"
 
@@ -51,16 +49,22 @@ static GLFWerrorfun _glfwErrorCallback;
 static GLFWallocator _glfwInitAllocator;
 static _GLFWinitconfig _glfwInitHints =
 {
-    GLFW_TRUE,      // hat buttons
-    GLFW_ANGLE_PLATFORM_TYPE_NONE, // ANGLE backend
-    GLFW_ANY_PLATFORM, // preferred platform
-    NULL,           // vkGetInstanceProcAddr function
+    .hatButtons = GLFW_TRUE,
+    .angleType = GLFW_ANGLE_PLATFORM_TYPE_NONE,
+    .platformID = GLFW_ANY_PLATFORM,
+    .vulkanLoader = NULL,
+    .ns =
     {
-        GLFW_TRUE,  // macOS menu bar
-        GLFW_TRUE   // macOS bundle chdir
+        .menubar = GLFW_TRUE,
+        .chdir = GLFW_TRUE
     },
+    .x11 =
     {
-        GLFW_TRUE,  // X11 XCB Vulkan surface
+        .xcbVulkanSurface = GLFW_TRUE,
+    },
+    .wl =
+    {
+        .libdecorMode = GLFW_WAYLAND_PREFER_LIBDECOR
     },
 };
 
@@ -171,6 +175,59 @@ size_t _glfwEncodeUTF8(char* s, uint32_t codepoint)
     return count;
 }
 
+// Splits and translates a text/uri-list into separate file paths
+// NOTE: This function destroys the provided string
+//
+char** _glfwParseUriList(char* text, int* count)
+{
+    const char* prefix = "file://";
+    char** paths = NULL;
+    char* line;
+
+    *count = 0;
+
+    while ((line = strtok(text, "\r\n")))
+    {
+        char* path;
+
+        text = NULL;
+
+        if (line[0] == '#')
+            continue;
+
+        if (strncmp(line, prefix, strlen(prefix)) == 0)
+        {
+            line += strlen(prefix);
+            // TODO: Validate hostname
+            while (*line != '/')
+                line++;
+        }
+
+        (*count)++;
+
+        path = _glfw_calloc(strlen(line) + 1, 1);
+        paths = _glfw_realloc(paths, *count * sizeof(char*));
+        paths[*count - 1] = path;
+
+        while (*line)
+        {
+            if (line[0] == '%' && line[1] && line[2])
+            {
+                const char digits[3] = { line[1], line[2], '\0' };
+                *path = (char) strtol(digits, NULL, 16);
+                line += 2;
+            }
+            else
+                *path = *line;
+
+            path++;
+            line++;
+        }
+    }
+
+    return paths;
+}
+
 char* _glfw_strdup(const char* source)
 {
     const size_t length = strlen(source);
@@ -179,28 +236,14 @@ char* _glfw_strdup(const char* source)
     return result;
 }
 
-float _glfw_fminf(float a, float b)
+int _glfw_min(int a, int b)
 {
-    if (a != a)
-        return b;
-    else if (b != b)
-        return a;
-    else if (a < b)
-        return a;
-    else
-        return b;
+    return a < b ? a : b;
 }
 
-float _glfw_fmaxf(float a, float b)
+int _glfw_max(int a, int b)
 {
-    if (a != a)
-        return b;
-    else if (b != b)
-        return a;
-    else if (a > b)
-        return a;
-    else
-        return b;
+    return a > b ? a : b;
 }
 
 void* _glfw_calloc(size_t count, size_t size)
@@ -415,6 +458,9 @@ GLFWAPI void glfwInitHint(int hint, int value)
             return;
         case GLFW_X11_XCB_VULKAN_SURFACE:
             _glfwInitHints.x11.xcbVulkanSurface = value;
+            return;
+        case GLFW_WAYLAND_LIBDECOR:
+            _glfwInitHints.wl.libdecorMode = value;
             return;
     }
 
